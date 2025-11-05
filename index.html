@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>glzz - Portfólio</title>
+  <link rel="icon" type="image/x-icon" href="favicon.ico" />
+  <link rel="stylesheet" href="style.css" />
+  <script src="https://unpkg.com/lucide@latest"></script>
+</head>
+<body>
+  <header></header>
+
+  <nav>
+    <ul>
+      <li><a href="#inicio">INÍCIO</a></li>
+      <li><a href="#redesociais">REDES SOCIAIS</a></li>
+    </ul>
+  </nav>
+
+  <main>
+    <section id="inicio">
+      <h2>PÁGINA INICIAL</h2>
+      <p>
+        Olá! Me chamo <strong>Guilherme</strong>, mas sou mais conhecido online como <strong>glzz</strong>.<br><br>
+        Sou um desenvolvedor web iniciante e atualmente estou <strong>aprendendo HTML e CSS</strong>, entendendo a base da criação de sites e explorando novas ideias.<br><br>
+        Também estou <strong>começando a aprender JavaScript com a ajuda do ChatGPT</strong>, praticando com pequenos códigos e experimentos para entender melhor como tudo funciona.<br><br>
+        <strong>Em breve, irei criar um portfólio com projetos feitos por mim</strong>, mostrando minha evolução e criatividade.
+      </p>
+    </section>
+
+    <section id="redesociais">
+      <h2>REDES SOCIAIS</h2>
+      <ul class="social-list">
+        <li><a href="https://www.instagram.com/glzzthebest7/" target="_blank"><i data-lucide="instagram"></i> Instagram</a></li>
+        <li><a href="https://discord.com/users/theglzzpower" target="_blank"><i data-lucide="message-square"></i> Discord</a></li>
+        <li><a href="https://github.com/theglzzbest-visionario" target="_blank"><i data-lucide="github"></i> GitHub</a></li>
+      </ul>
+    </section>
+  </main>
+
+  <div class="music-bar" id="musicBar">
+    <button id="togglePlayer" class="toggle-btn"><i data-lucide="chevron-down"></i></button>
+
+    <div class="music-info">
+      <i data-lucide="music" class="icon"></i>
+      <span id="music-title">Nenhuma música tocando</span>
+    </div>
+
+    <div class="controls">
+      <button id="prev"><i data-lucide="skip-back"></i></button>
+      <button id="play" class="play-btn"><i data-lucide="play"></i></button>
+      <button id="next"><i data-lucide="skip-forward"></i></button>
+    </div>
+
+    <div class="progress-container">
+      <span id="current-time">0:00</span>
+      <input type="range" id="progress" min="0" value="0" step="1" />
+      <span id="duration">0:00</span>
+    </div>
+
+    <div class="volume">
+      <button id="volumeBtn" class="volume-icon-btn" aria-label="Alternar mudo">
+        <i id="volumeIcon" data-lucide="volume-2"></i>
+      </button>
+      <input type="range" id="volumeRange" min="0" max="1" step="0.01" value="0.5" />
+    </div>
+  </div>
+
+  <button id="openPlayer" class="open-player hidden"><i data-lucide="music-2"></i></button>
+
+  <audio id="audio"></audio>
+
+  <script>
+    const songs = [
+      { title: "Alternative Outro", src: "musicas/Alternative Outro.mp3" },
+      { title: "My Tears Are Becoming A Sea", src: "musicas/My Tears Are Becoming A Sea.mp3" }
+    ];
+
+    const audio = document.getElementById('audio');
+    const title = document.getElementById('music-title');
+    const playBtn = document.getElementById('play');
+    const prevBtn = document.getElementById('prev');
+    const nextBtn = document.getElementById('next');
+    const progress = document.getElementById('progress');
+    const currentTimeEl = document.getElementById('current-time');
+    const durationEl = document.getElementById('duration');
+    const volumeRange = document.getElementById('volumeRange');
+    const volumeBtn = document.getElementById('volumeBtn');
+    const toggleBtn = document.getElementById('togglePlayer');
+    const openPlayerBtn = document.getElementById('openPlayer');
+    const musicBar = document.getElementById('musicBar');
+    let volumeIcon = document.getElementById('volumeIcon');
+
+    let currentSong = localStorage.getItem('currentSong') ? parseInt(localStorage.getItem('currentSong')) : 0;
+    let lastTime = localStorage.getItem('currentTime') ? parseFloat(localStorage.getItem('currentTime')) : 0;
+
+    function loadSong(index) {
+      const song = songs[index];
+      audio.src = song.src;
+      title.textContent = song.title;
+      localStorage.setItem('currentSong', index);
+    }
+
+    function updateVolumeIcon() {
+      let iconName;
+      if (audio.muted || Number(volumeRange.value) === 0) {
+        iconName = "volume-x";
+      } else if (Number(volumeRange.value) < 0.5) {
+        iconName = "volume-1";
+      } else {
+        iconName = "volume-2";
+      }
+      volumeBtn.innerHTML = `<i id="volumeIcon" data-lucide="${iconName}"></i>`;
+      volumeIcon = document.getElementById('volumeIcon');
+      lucide.createIcons();
+    }
+
+    function playPause() {
+      if (audio.paused) {
+        audio.play();
+        playBtn.innerHTML = '<i data-lucide="pause"></i>';
+      } else {
+        audio.pause();
+        playBtn.innerHTML = '<i data-lucide="play"></i>';
+      }
+      lucide.createIcons();
+    }
+
+    function nextSong() {
+      currentSong = (currentSong + 1) % songs.length;
+      loadSong(currentSong);
+      audio.play();
+      playBtn.innerHTML = '<i data-lucide="pause"></i>';
+      lucide.createIcons();
+    }
+
+    function prevSong() {
+      currentSong = (currentSong - 1 + songs.length) % songs.length;
+      loadSong(currentSong);
+      audio.play();
+      playBtn.innerHTML = '<i data-lucide="pause"></i>';
+      lucide.createIcons();
+    }
+
+    function formatTime(time) {
+      if (isNaN(time)) return '0:00';
+      const minutes = Math.floor(time / 60);
+      const seconds = Math.floor(time % 60).toString().padStart(2, '0');
+      return `${minutes}:${seconds}`;
+    }
+
+    audio.addEventListener('timeupdate', () => {
+      const progressPercent = (audio.currentTime / audio.duration) * 100;
+      progress.value = progressPercent || 0;
+      currentTimeEl.textContent = formatTime(audio.currentTime);
+      durationEl.textContent = formatTime(audio.duration);
+      localStorage.setItem('currentTime', audio.currentTime);
+    });
+
+    progress.addEventListener('input', () => {
+      if (!isNaN(audio.duration)) {
+        audio.currentTime = (progress.value / 100) * audio.duration;
+      }
+    });
+
+    volumeRange.addEventListener('input', () => {
+      audio.volume = Number(volumeRange.value);
+      if (audio.volume > 0 && audio.muted) audio.muted = false;
+      updateVolumeIcon();
+    });
+
+    volumeBtn.addEventListener('click', () => {
+      audio.muted = !audio.muted;
+      updateVolumeIcon();
+    });
+
+    toggleBtn.addEventListener('click', () => {
+      musicBar.classList.add('hidden');
+      openPlayerBtn.classList.remove('hidden');
+      lucide.createIcons();
+    });
+
+    openPlayerBtn.addEventListener('click', () => {
+      musicBar.classList.remove('hidden');
+      openPlayerBtn.classList.add('hidden');
+      lucide.createIcons();
+    });
+
+    audio.addEventListener('ended', nextSong);
+    playBtn.addEventListener('click', playPause);
+    nextBtn.addEventListener('click', nextSong);
+    prevBtn.addEventListener('click', prevSong);
+
+    loadSong(currentSong);
+    audio.currentTime = lastTime;
+    audio.volume = volumeRange.value;
+    updateVolumeIcon();
+
+    lucide.createIcons();
+  </script>
+</body>
+</html>

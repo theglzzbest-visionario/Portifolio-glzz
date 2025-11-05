@@ -1,0 +1,267 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: 'Poppins', sans-serif;
+}
+
+body {
+  background-color: #ffffff;
+  color: #222;
+  line-height: 1.6;
+  scroll-behavior: smooth;
+}
+
+/* NAVBAR */
+nav {
+  background-color: #ffffff;
+  padding: 1rem 0;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+}
+
+nav ul {
+  display: flex;
+  justify-content: center;
+  list-style: none;
+  gap: 2rem;
+}
+
+nav a {
+  text-decoration: none;
+  color: #333333;
+  font-weight: 500;
+  transition: 0.3s;
+}
+
+nav a:hover {
+  color: #000000;
+  text-shadow: 0 0 5px rgba(0,0,0,0.1);
+}
+
+/* CONTEÚDO */
+main {
+  max-width: 900px;
+  margin: 2rem auto;
+  padding: 0 1rem;
+}
+
+section {
+  margin-bottom: 3rem;
+  background-color: #ffffff;
+  border: 1px solid #dddddd;
+  border-radius: 10px;
+  padding: 2rem;
+  transition: 0.3s ease;
+}
+
+section:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 4px 20px rgba(0,0,0,0.05);
+}
+
+h2 {
+  color: #000000;
+  margin-bottom: 1rem;
+  font-size: 1.5rem;
+  border-bottom: 2px solid #000000;
+  display: inline-block;
+  padding-bottom: 0.3rem;
+}
+
+p {
+  font-size: 1rem;
+  color: #333333;
+}
+
+ul.social-list {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 0.8rem;
+  padding-left: 0;
+}
+
+ul.social-list a {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  color: #000;
+  text-decoration: none;
+  font-weight: 500;
+  transition: 0.3s;
+}
+
+ul.social-list a:hover {
+  color: #0077ff;
+  transform: translateX(3px);
+}
+
+/* 🎵 PLAYER DE MÚSICA */
+.music-bar {
+  position: fixed;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 95%;
+  max-width: 900px;
+  background: #fff;
+  border: 1px solid #ccc;
+  border-radius: 12px 12px 0 0;
+  padding: 0.8rem 1.2rem;
+  box-shadow: 0 -2px 15px rgba(0,0,0,0.1);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  transition: all 0.4s ease;
+  opacity: 1;
+}
+
+.music-bar.hidden {
+  transform: translate(-50%, 110%);
+  opacity: 0;
+}
+
+/* botão de recolher */
+.toggle-btn {
+  background: none;
+  border: none;
+  color: #333;
+  cursor: pointer;
+  transition: transform 0.3s;
+}
+.toggle-btn:hover {
+  transform: translateY(2px);
+}
+
+/* música e ícone */
+.music-info {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  flex: 1;
+}
+.music-info .icon {
+  color: #000;
+}
+
+/* controles */
+.controls {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+}
+
+.controls button {
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: #000;
+  font-size: 1rem;
+  padding: 0.3rem;
+  transition: transform 0.2s, color 0.2s;
+}
+
+.controls button:hover {
+  color: #0077ff;
+  transform: scale(1.1);
+}
+
+/* progresso */
+.progress-container {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  flex: 2;
+}
+
+#progress {
+  flex: 1;
+  accent-color: #0077ff;
+  cursor: pointer;
+}
+
+/* tempo */
+#current-time,
+#duration {
+  font-size: 0.8rem;
+  color: #555;
+}
+
+/* volume */
+.volume {
+  display: flex;
+  align-items: center;
+  gap: 0.3rem;
+}
+
+.volume input {
+  width: 80px;
+  cursor: pointer;
+  accent-color: #0077ff;
+}
+
+.volume-icon-btn {
+  background: none;
+  border: none;
+  color: #000;
+  cursor: pointer;
+  transition: transform 0.2s, color 0.2s;
+}
+
+.volume-icon-btn:hover {
+  color: #0077ff;
+  transform: scale(1.1);
+}
+
+/* botão flutuante de reabrir */
+.open-player {
+  position: fixed;
+  bottom: 1rem;
+  right: 1rem;
+  background-color: #0077ff;
+  border: none;
+  border-radius: 50%;
+  padding: 0.8rem;
+  cursor: pointer;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+  color: #fff;
+  transition: transform 0.3s ease, opacity 0.3s;
+}
+
+.open-player:hover {
+  transform: scale(1.1);
+}
+
+.open-player.hidden {
+  opacity: 0;
+  pointer-events: none;
+}
+
+/* animação botão play */
+.play-btn.playing {
+  color: #0077ff;
+  transform: scale(1.2);
+  animation: pulse 1s infinite;
+}
+
+@keyframes pulse {
+  0% { transform: scale(1); }
+  50% { transform: scale(1.15); }
+  100% { transform: scale(1); }
+}
+
+/* responsivo */
+@media (max-width: 600px) {
+  .music-bar {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 0.5rem;
+  }
+  .progress-container {
+    width: 100%;
+  }
+}
